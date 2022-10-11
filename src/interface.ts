@@ -31,15 +31,15 @@ export interface Node<Type> {
   name: string;
 }
 
-type GetChildren_Argument = Pick<
+export type GetSubNode_Argument = Pick<
   PrintTree_Argument,
   "path" | "parentNode" | "xLevel" | "yLevel"
 >;
-export type GetSubNodes<Type> = (arg: GetChildren_Argument) => Node<Type>[];
+export type GetSubNodes<Type> = (arg: GetSubNode_Argument) => Node<Type>[];
 
 // ============
 type ShouldDescendInSubNode = (
-  arg: GetChildren_Argument & { subNodes: Node<any>[] }
+  arg: GetSubNode_Argument & { subNodes: Node<any>[] }
 ) => boolean;
 
 // ============
