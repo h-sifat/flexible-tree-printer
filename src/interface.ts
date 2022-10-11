@@ -18,7 +18,7 @@ export interface PrintTree_Argument<Type = any> {
   path: Readonly<string[]>;
   indentationLength: number;
   getNodePrefix: GetNodePrefix;
-  getSubNodes: GetChildren<Type>;
+  getSubNodes: GetSubNodes<Type>;
   numOfHLinesBeforeNode?: number;
   sortNodes: (nodes: Node<Type>[]) => void;
   xLevelsOfLastNodeAncestors: Readonly<number[]>;
@@ -35,7 +35,7 @@ type GetChildren_Argument = Pick<
   PrintTree_Argument,
   "path" | "parentNode" | "xLevel" | "yLevel"
 >;
-export type GetChildren<Type> = (arg: GetChildren_Argument) => Node<Type>[];
+export type GetSubNodes<Type> = (arg: GetChildren_Argument) => Node<Type>[];
 
 // ============
 type ShouldDescendInSubNode = (
@@ -54,7 +54,7 @@ export type GetNodePrefix_Argument = Pick<
 export type GetNodePrefix = (arg: GetNodePrefix_Argument) => string[];
 
 // ============
-type PrintNode_Argument = GetNodePrefix_Argument &
+export type PrintNode_Argument = GetNodePrefix_Argument &
   Pick<PrintTree_Argument, "parentNode" | "path" | "yLevel"> & {
     node: Node<any>;
     nodePrefix: string[];
@@ -62,8 +62,12 @@ type PrintNode_Argument = GetNodePrefix_Argument &
 export type PrintNode = (arg: PrintNode_Argument) => void;
 
 // ============
-type ForEachCallback<Type> = (item: Type, index: number, array: Type[]) => void;
+export type ForEachCallback<Type> = (
+  item: Type,
+  index: number,
+  array: Type[]
+) => void;
 export type ForEach<Type> = (
   array: Type[],
   callback: ForEachCallback<Type>
-) => Symbol;
+) => void;
