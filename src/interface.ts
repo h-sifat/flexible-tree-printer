@@ -55,7 +55,7 @@ export type GetNodePrefix = (arg: GetNodePrefix_Argument) => string[];
 
 // ============
 type PrintNode_Argument = GetNodePrefix_Argument &
-  Pick<PrintTree_Argument, "parentNode" | "path"> & {
+  Pick<PrintTree_Argument, "parentNode" | "path" | "yLevel"> & {
     node: Node<any>;
     nodePrefix: string[];
   };
