@@ -5,13 +5,13 @@
   "main": "index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
     "build": "webpack",
     "prebuild": "npm test",
+    "prepare": "husky install",
+    "test:watch": "jest --watch",
+    "test": "jest --passWithNoTests",
     "prepublishOnly": "npm run build",
-    "prepare": "husky install"
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
