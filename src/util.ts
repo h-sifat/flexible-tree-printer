@@ -88,6 +88,9 @@ export function validate<Type>(
 }
 
 const printTreeArgumentSchema = Object.freeze({
+  path: "array",
+  xLevel: "number",
+  yLevel: "number",
   maxLevel: "number",
   forEach: "function",
   connectors: "object",
@@ -96,7 +99,9 @@ const printTreeArgumentSchema = Object.freeze({
   sortNodes: "function",
   getSubNodes: "function",
   getNodePrefix: "function",
+  printRootNode: "function",
   indentationLength: "number",
+  xLevelsOfLastNodeAncestors: "array",
   shouldDescendIntoSubNode: "function",
 });
 
@@ -169,6 +174,7 @@ export function forEach<Type>(array: Type[], callback: ForEachCallback<Type>) {
 
 export function printNode(arg: PrintNode_Argument) {
   const line = arg.nodePrefix.join("") + arg.node.name;
+  console.log(line);
 }
 
 export function getSubNodes(arg: GetSubNode_Argument): Node<any>[] {

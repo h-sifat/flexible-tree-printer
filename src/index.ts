@@ -29,26 +29,31 @@ export const DEFAULT_ARGUMENT: Omit<
   maxLevel: Infinity,
   sortNodes: () => {},
   indentationLength: 4,
-  numOfHLinesBeforeNode: 2,
   shouldDescendIntoSubNode: () => true,
+  printRootNode: () => console.log("."),
 });
 
-export function printTree(userArgument: Partial<PrintTree_Argument>) {
-  const printTreeArgument: PrintTree_Argument = {
-    ...DEFAULT_ARGUMENT,
-    // overriding default arguments
-    ...userArgument,
+type PrintTreeWrapperArgument = Partial<PrintTree_Argument> & {
+  printRootNode: () => void;
+};
 
-    // properties that the user is not allowed to change
-    path: [],
-    xLevel: 1,
-    yLevel: 1,
-    xLevelsOfLastNodeAncestors: [],
-  };
+export function printTree(userArgument: PrintTreeWrapperArgument) {
+  const printTreeArgument: PrintTree_Argument & { printRootNode: () => void } =
+    {
+      ...DEFAULT_ARGUMENT,
+      // overriding default arguments
+      ...userArgument,
+
+      // properties that the user is not allowed to change
+      path: [],
+      xLevel: 1,
+      yLevel: 1,
+      xLevelsOfLastNodeAncestors: [],
+    };
 
   validatePrintTreeArgument(printTreeArgument);
 
-  console.log(".");
+  printTreeArgument.printRootNode();
 
   __printTree__(printTreeArgument);
 }
