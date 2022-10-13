@@ -1,30 +1,81 @@
 import { is, validate, validatePrintTreeArgument } from "../src/util";
 
 describe("validatePrintTreeArgument", () => {
-  const defaultArgs = Object.freeze({
+  const validArg = Object.freeze({
+    path: [],
+    xLevel: 1,
+    yLevel: 1,
+    connectors: {},
+    parentNode: null,
+    forEach: () => {},
+    maxLevel: Infinity,
+    printNode: () => {},
+    sortNodes: () => {},
     indentationLength: 4,
-    numOfHLinesBeforeNode: 3,
+    getSubNodes: () => {},
+    getNodePrefix: () => {},
+    xLevelsOfLastNodeAncestors: [],
+    shouldDescendIntoSubNode: () => true,
+    printRootNode: () => console.log("."),
   });
+
+  const invalidArgs = Object.freeze({
+    path: 234, // not array
+    xLevel: "324", // not number
+    yLevel: [], // not number
+    connectors: null, // not plain_object
+    parentNode: 2234, // not object
+    forEach: {}, // not function
+    maxLevel: Symbol(), // not number
+    printNode: 24_234, // not function
+    sortNodes: false, // not function
+    indentationLength: "4", // not number
+    getSubNodes: [() => {}], // not function
+    getNodePrefix: "duck", // not function
+    xLevelsOfLastNodeAncestors: 324, /// not array
+    shouldDescendIntoSubNode: "no, shut up!", // not function
+    printRootNode: ".", // not function
+  });
+
+  {
+    const errorCode = "INVALID_PROPERTY";
+    for (const [property, invalidValue] of Object.entries(invalidArgs)) {
+      const invalidPrintTreeArg = { ...validArg, [property]: invalidValue };
+
+      it(`it throws ewc "${errorCode}" if property "${property}" is not valid`, () => {
+        expect.assertions(1);
+        try {
+          validatePrintTreeArgument(invalidPrintTreeArg);
+        } catch (ex: any) {
+          expect(ex.code).toBe(errorCode);
+        }
+      });
+    }
+  }
 
   it.each([
     {
-      arg: { ...defaultArgs, indentationLength: -123.34 },
+      arg: { ...validArg, indentationLength: -123.34 },
       case: "indentationLength is not a positive integer",
     },
     {
-      arg: { indentationLength: 4, numOfHLinesBeforeNode: 2.32 },
+      arg: {
+        ...validArg,
+        indentationLength: 4,
+        numOfHLinesBeforeNode: 2.32,
+      },
       case: "numOfHLinesBeforeNode is not a positive integer",
     },
     {
-      arg: { ...defaultArgs, indentationLength: 1 },
+      arg: { ...validArg, indentationLength: 1 },
       case: "indentationLength is less than 2",
     },
     {
-      arg: { indentationLength: 4, numOfHLinesBeforeNode: 4 },
+      arg: { ...validArg, indentationLength: 4, numOfHLinesBeforeNode: 4 },
       case: "numOfHLinesBeforeNode is equal to indentationLength",
     },
     {
-      arg: { indentationLength: 4, numOfHLinesBeforeNode: 5 },
+      arg: { ...validArg, indentationLength: 4, numOfHLinesBeforeNode: 5 },
       case: "numOfHLinesBeforeNode is greater than indentationLength",
     },
   ])(`throws error if $case`, ({ arg }) => {
@@ -104,7 +155,8 @@ describe("validate", () => {
   const schema = Object.freeze({
     age: "number",
     name: "string",
-  });
+    phone: { type: "string", isOptional: true },
+  } as const);
 
   const validObject = Object.freeze({
     age: 41,
@@ -136,6 +188,11 @@ describe("validate", () => {
       object: { ...validObject, duck: 1421 },
       case: "object contains unknown properties",
       errorCode: "UNKNOWN_PROPERTY",
+    },
+    {
+      object: { ...validObject, phone: 1421 },
+      case: "optional property is invalid",
+      errorCode: "INVALID_PROPERTY",
     },
   ])(`it throws error if $case`, ({ object, errorCode }) => {
     expect.assertions(1);

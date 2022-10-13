@@ -50,7 +50,7 @@ class EPP extends Error {
 }
 
 interface ValidatorSchema {
-  [key: string]: keyof IsTypes;
+  [key: string]: string | { type: string; isOptional: boolean };
 }
 
 interface OtherValidatorArgument {
@@ -62,29 +62,50 @@ export function validate<Type>(
   object: unknown,
   otherArg: OtherValidatorArgument
 ): asserts object is Type {
-  const { name, schema } = otherArg;
+  const { name: objectName, schema } = otherArg;
 
   if (!is("plain_object", object))
     throw new EPP({
       code: "NOT_PLAIN_OBJECT",
-      message: `"${name}" must be a plain object.`,
+      message: `"${objectName}" must be a plain object.`,
     });
 
-  for (const [property, value] of Object.entries(object)) {
-    const propertyType = schema[property];
+  const allObjectProperties = new Set(Object.keys(object));
 
-    if (!(property in schema))
+  for (const [property, propertySchema] of Object.entries(schema)) {
+    const { type: propertyType, isOptional: isPropertyOptional } = (() => {
+      if (is("string", propertySchema))
+        return {
+          type: propertySchema,
+          isOptional: false,
+        };
+
+      return propertySchema;
+    })();
+
+    allObjectProperties.delete(property);
+
+    if (!(property in object)) {
+      if (isPropertyOptional) continue;
+
       throw new EPP({
-        code: "UNKNOWN_PROPERTY",
-        message: `Unknown property "${property}" in ${name}`,
+        code: "MISSING_PROPERTY",
+        message: `Missing property "${property}" in ${objectName}`,
       });
+    }
 
-    if (!is(propertyType, value))
+    if (!is(<any>propertyType, (object as any)[property]))
       throw new EPP({
         code: "INVALID_PROPERTY",
-        message: `"${name}.${property}" must be of type ${propertyType}`,
+        message: `"${objectName}.${property}" must be of type ${propertyType}`,
       });
   }
+
+  for (const unknownProperty of allObjectProperties.values())
+    throw new EPP({
+      code: "UNKNOWN_PROPERTY",
+      message: `Unknown property "${unknownProperty}" in ${objectName}`,
+    });
 }
 
 const printTreeArgumentSchema = Object.freeze({
@@ -93,16 +114,17 @@ const printTreeArgumentSchema = Object.freeze({
   yLevel: "number",
   maxLevel: "number",
   forEach: "function",
-  connectors: "object",
   parentNode: "object",
   printNode: "function",
   sortNodes: "function",
   getSubNodes: "function",
   getNodePrefix: "function",
   printRootNode: "function",
+  connectors: "plain_object",
   indentationLength: "number",
   xLevelsOfLastNodeAncestors: "array",
   shouldDescendIntoSubNode: "function",
+  numOfHLinesBeforeNode: { type: "number", isOptional: true },
 });
 
 export function validatePrintTreeArgument(
