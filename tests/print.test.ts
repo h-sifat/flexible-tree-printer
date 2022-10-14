@@ -8,17 +8,17 @@ const argMethods = Object.freeze({
   sortNodes: jest.fn(),
   getSubNodes: jest.fn(),
   getNodePrefix: jest.fn(),
-  shouldDescendIntoSubNode: jest.fn(),
+  shouldDescend: jest.fn(),
 } as const);
 
 const arg: PrintTree_Argument = Object.freeze({
   path: [],
-  xLevel: 1,
-  yLevel: 1,
+  levelX: 1,
+  levelY: 1,
   connectors,
   ...argMethods,
   parentNode: null,
-  maxLevel: Infinity,
+  maxDepth: Infinity,
   indentationLength: 4,
   xLevelsOfLastNodeAncestors: [],
 });
@@ -27,8 +27,8 @@ beforeEach(() => {
   Object.values(argMethods).forEach((method) => method.mockReset());
 });
 
-it(`stops printing if xLevel becomes greater than maxLevel`, () => {
-  printTree({ ...arg, maxLevel: 2, xLevel: 3 });
+it(`stops printing if levelX becomes greater than maxLevel`, () => {
+  printTree({ ...arg, maxDepth: 2, levelX: 3 });
 
   // no method should have been called
   Object.values(argMethods).forEach((method) => {
@@ -45,8 +45,8 @@ it(`doesn't returns if the subNodes array is empty`, () => {
   const getSubNodesCallArgs = argMethods.getSubNodes.mock.lastCall![0];
   expect(getSubNodesCallArgs).toMatchObject({
     path: arg.path,
-    xLevel: arg.xLevel,
-    yLevel: arg.yLevel,
+    levelX: arg.levelX,
+    levelY: arg.levelY,
     parentNode: arg.parentNode,
   });
 
@@ -58,28 +58,27 @@ it(`doesn't returns if the subNodes array is empty`, () => {
       expect(argMethods[method]).not.toHaveBeenCalled();
 });
 
-it(`doesn't descend into a node if the shouldDescendIntoSubNode returns false`, () => {
+it(`doesn't descend into a node if the shouldDescend returns false`, () => {
   const fakeSubNodes = [{ name: "A", value: 1 }];
   argMethods.getSubNodes.mockReturnValueOnce(fakeSubNodes);
-  argMethods.shouldDescendIntoSubNode.mockReturnValueOnce(false);
+  argMethods.shouldDescend.mockReturnValueOnce(false);
 
   printTree(arg);
 
   expect(argMethods.getSubNodes).toHaveBeenCalledTimes(1);
-  expect(argMethods.shouldDescendIntoSubNode).toHaveBeenCalledTimes(1);
+  expect(argMethods.shouldDescend).toHaveBeenCalledTimes(1);
 
-  const shouldDescendIntoSubNode =
-    argMethods.shouldDescendIntoSubNode.mock.lastCall![0];
-  expect(shouldDescendIntoSubNode).toMatchObject({
+  const shouldDescend = argMethods.shouldDescend.mock.lastCall![0];
+  expect(shouldDescend).toMatchObject({
     path: arg.path,
-    xLevel: arg.xLevel,
-    yLevel: arg.yLevel,
+    levelX: arg.levelX,
+    levelY: arg.levelY,
     subNodes: fakeSubNodes,
     parentNode: arg.parentNode,
   });
 
   for (const method in argMethods)
-    if (!["getSubNodes", "shouldDescendIntoSubNode"].includes(method))
+    if (!["getSubNodes", "shouldDescend"].includes(method))
       // @ts-ignore
       expect(argMethods[method]).not.toHaveBeenCalled();
 });
@@ -88,14 +87,22 @@ it(`calls the sortNodes before looping over nodes and printing them`, () => {
   const fakeSubNodes = [{ name: "A", value: 1 }];
 
   argMethods.getSubNodes.mockReturnValueOnce(fakeSubNodes);
-  argMethods.shouldDescendIntoSubNode.mockReturnValueOnce(true);
+  argMethods.shouldDescend.mockReturnValueOnce(true);
 
   printTree(arg);
 
   expect(argMethods.getSubNodes).toHaveBeenCalledTimes(1);
-  expect(argMethods.shouldDescendIntoSubNode).toHaveBeenCalledTimes(1);
+  expect(argMethods.shouldDescend).toHaveBeenCalledTimes(1);
   expect(argMethods.sortNodes).toHaveBeenCalledTimes(1);
-  expect(argMethods.sortNodes).toHaveBeenCalledWith(fakeSubNodes);
+
+  expect(argMethods.sortNodes).toHaveBeenCalledWith({
+    path: [],
+    levelX: arg.levelX,
+    levelY: arg.levelY,
+    subNodes: fakeSubNodes,
+    parentNode: arg.parentNode,
+  });
+
   expect(argMethods.forEach).toHaveBeenCalledTimes(1);
 
   {
@@ -112,7 +119,7 @@ describe("inside the loop it should call the getNodePrefix function", () => {
   const fakeSubNodes = [{ name: "A", value: 1 }];
 
   argMethods.getSubNodes.mockReturnValueOnce(fakeSubNodes);
-  argMethods.shouldDescendIntoSubNode.mockReturnValueOnce(true);
+  argMethods.shouldDescend.mockReturnValueOnce(true);
 
   printTree(arg);
 
@@ -140,7 +147,7 @@ describe("inside the loop it should call the getNodePrefix function", () => {
   const getNodePrefixCallArg = argMethods.getNodePrefix.mock.lastCall![0];
 
   const expectedGetNodePrefixCallArg = Object.freeze({
-    xLevel: arg.xLevel,
+    levelX: arg.levelX,
     connectors: arg.connectors,
     isLastNode: subNodes.length - 1 === currentIndex,
     indentationLength: arg.indentationLength,
@@ -169,8 +176,8 @@ describe("inside the loop it should call the getNodePrefix function", () => {
 
   expect(getSubNodesSecondCallArgs).toEqual({
     path: expectedPrintNodeCallArg.path,
-    xLevel: arg.xLevel + 1,
-    yLevel: arg.yLevel + 1,
+    levelX: arg.levelX + 1,
+    levelY: arg.levelY + 1,
     parentNode: expectedPrintNodeCallArg.node.value,
   });
 });

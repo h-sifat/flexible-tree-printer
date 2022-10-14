@@ -6,7 +6,7 @@ export default function getNodePrefix(arg: GetNodePrefix_Argument) {
 
   const prefix: string[] = [];
 
-  for (let level = 1; level < arg.xLevel; level++) {
+  for (let level = 1; level < arg.levelX; level++) {
     prefix.push(
       arg.xLevelsOfLastNodeAncestors.includes(level)
         ? connectors.space

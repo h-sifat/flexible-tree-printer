@@ -8,9 +8,9 @@ export type Connectors = Readonly<{
 
 // ============
 export interface PrintTree_Argument<Type = any> {
-  xLevel: number;
-  yLevel: number;
-  maxLevel: number;
+  levelX: number;
+  levelY: number;
+  maxDepth: number;
   parentNode: Type;
   printNode: PrintNode;
   connectors: Connectors;
@@ -18,11 +18,11 @@ export interface PrintTree_Argument<Type = any> {
   path: Readonly<string[]>;
   indentationLength: number;
   getNodePrefix: GetNodePrefix;
+  shouldDescend: ShouldDescend;
   getSubNodes: GetSubNodes<Type>;
   numOfHLinesBeforeNode?: number;
-  sortNodes: (nodes: Node<Type>[]) => void;
+  sortNodes: (arg: ShouldDescend_Argument) => void;
   xLevelsOfLastNodeAncestors: Readonly<number[]>;
-  shouldDescendIntoSubNode: ShouldDescendInSubNode;
 }
 
 // ============
@@ -33,19 +33,18 @@ export interface Node<Type> {
 
 export type GetSubNode_Argument = Pick<
   PrintTree_Argument,
-  "path" | "parentNode" | "xLevel" | "yLevel"
+  "path" | "parentNode" | "levelX" | "levelY"
 >;
 export type GetSubNodes<Type> = (arg: GetSubNode_Argument) => Node<Type>[];
 
 // ============
-type ShouldDescendInSubNode = (
-  arg: GetSubNode_Argument & { subNodes: Node<any>[] }
-) => boolean;
+type ShouldDescend_Argument = GetSubNode_Argument & { subNodes: Node<any>[] };
+type ShouldDescend = (arg: ShouldDescend_Argument) => boolean;
 
 // ============
 export type GetNodePrefix_Argument = Pick<
   PrintTree_Argument,
-  | "xLevel"
+  | "levelX"
   | "connectors"
   | "indentationLength"
   | "numOfHLinesBeforeNode"
@@ -55,7 +54,7 @@ export type GetNodePrefix = (arg: GetNodePrefix_Argument) => string[];
 
 // ============
 export type PrintNode_Argument = GetNodePrefix_Argument &
-  Pick<PrintTree_Argument, "parentNode" | "path" | "yLevel"> & {
+  Pick<PrintTree_Argument, "parentNode" | "path" | "levelY"> & {
     node: Node<any>;
     nodePrefix: string[];
   };

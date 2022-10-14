@@ -16,9 +16,9 @@ export const connectors: Connectors = Object.freeze({
   vLine: "│",
 });
 
-export const DEFAULT_ARGUMENT: Omit<
+export const DEFAULTS: Omit<
   PrintTree_Argument,
-  "path" | "xLevel" | "yLevel" | "xLevelsOfLastNodeAncestors"
+  "path" | "levelX" | "levelY" | "xLevelsOfLastNodeAncestors"
 > = Object.freeze({
   forEach,
   printNode,
@@ -26,10 +26,10 @@ export const DEFAULT_ARGUMENT: Omit<
   getSubNodes,
   getNodePrefix,
   parentNode: null,
-  maxLevel: Infinity,
+  maxDepth: Infinity,
   sortNodes: () => {},
   indentationLength: 4,
-  shouldDescendIntoSubNode: () => true,
+  shouldDescend: () => true,
   printRootNode: () => console.log("."),
 });
 
@@ -40,14 +40,14 @@ type PrintTreeWrapperArgument = Partial<PrintTree_Argument> & {
 export function printTree(userArgument: PrintTreeWrapperArgument) {
   const printTreeArgument: PrintTree_Argument & { printRootNode: () => void } =
     {
-      ...DEFAULT_ARGUMENT,
-      // overriding default arguments
+      ...DEFAULTS,
+      // overriding default properties
       ...userArgument,
 
       // properties that the user is not allowed to change
       path: [],
-      xLevel: 1,
-      yLevel: 1,
+      levelX: 1,
+      levelY: 2, // 2, because of printing the head node
       xLevelsOfLastNodeAncestors: [],
     };
 

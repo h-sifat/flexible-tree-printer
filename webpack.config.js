@@ -22,7 +22,7 @@ module.exports = {
     globalObject: "this",
     library: {
       type: "umd",
-      name: "tree_printer",
+      name: "flexible_tree_printer",
     },
   },
 };

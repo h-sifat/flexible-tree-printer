@@ -22,19 +22,19 @@ const NODE_PREFIX = Object.freeze([
 
 const testSuite = [
   {
-    arg: { ...defaultArgs, xLevel: 1, isLastNode: false },
+    arg: { ...defaultArgs, levelX: 1, isLastNode: false },
     prefix: [connectors.tee, ...NODE_PREFIX],
   },
   {
-    arg: { ...defaultArgs, xLevel: 1, isLastNode: true },
+    arg: { ...defaultArgs, levelX: 1, isLastNode: true },
     prefix: [connectors.elbow, ...NODE_PREFIX],
   },
   {
-    arg: { ...defaultArgs, xLevel: 2, isLastNode: false },
+    arg: { ...defaultArgs, levelX: 2, isLastNode: false },
     prefix: [connectors.vLine, ...SPACE_OFFSET, connectors.tee, ...NODE_PREFIX],
   },
   {
-    arg: { ...defaultArgs, xLevel: 2, isLastNode: true },
+    arg: { ...defaultArgs, levelX: 2, isLastNode: true },
     prefix: [
       // level 1
       connectors.vLine,
@@ -49,7 +49,7 @@ const testSuite = [
   {
     arg: {
       ...defaultArgs,
-      xLevel: 3,
+      levelX: 3,
       isLastNode: false,
       xLevelsOfLastNodeAncestors: [2],
     },
@@ -71,7 +71,7 @@ const testSuite = [
   {
     arg: {
       ...defaultArgs,
-      xLevel: 3,
+      levelX: 3,
       isLastNode: true,
       xLevelsOfLastNodeAncestors: [2],
     },
@@ -94,7 +94,7 @@ const testSuite = [
 Object.freeze(testSuite);
 
 for (const { prefix: expectedPrefix, arg } of testSuite) {
-  let testCase = `lvl ${arg.xLevel} ` + `${arg.isLastNode ? "last " : ""}node`;
+  let testCase = `lvl ${arg.levelX} ` + `${arg.isLastNode ? "last " : ""}node`;
 
   if (arg.xLevelsOfLastNodeAncestors.length)
     testCase += ` with last node ancestor on levels ${arg.xLevelsOfLastNodeAncestors}`;
@@ -110,7 +110,7 @@ test.each([
   {
     arg: {
       ...defaultArgs,
-      xLevel: 1,
+      levelX: 1,
       isLastNode: false,
       numOfHLinesBeforeNode: 3,
     },
@@ -124,7 +124,7 @@ test.each([
   {
     arg: {
       ...defaultArgs,
-      xLevel: 1,
+      levelX: 1,
       isLastNode: false,
       numOfHLinesBeforeNode: 1,
     },
@@ -138,7 +138,7 @@ test.each([
   {
     arg: {
       ...defaultArgs,
-      xLevel: 1,
+      levelX: 1,
       isLastNode: true,
       numOfHLinesBeforeNode: 0,
     },

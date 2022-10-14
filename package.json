@@ -21,7 +21,8 @@
     "tree",
     "print",
     "console",
-    "treefy-object"
+    "pretty",
+    "object-treefy"
   ],
   "author": "Muhammad Sifat Hossain",
   "license": "MIT",

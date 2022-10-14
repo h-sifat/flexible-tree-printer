@@ -4,7 +4,7 @@ export default function printTree(arg: PrintTree_Argument) {
   const {
     path,
     forEach,
-    maxLevel,
+    maxDepth,
     printNode,
     sortNodes,
     connectors,
@@ -13,36 +13,28 @@ export default function printTree(arg: PrintTree_Argument) {
     indentationLength,
     parentNode = null,
     numOfHLinesBeforeNode,
-    shouldDescendIntoSubNode,
+    shouldDescend,
     xLevelsOfLastNodeAncestors,
   } = arg;
 
-  let { xLevel, yLevel } = arg;
+  let { levelX, levelY } = arg;
 
-  if (xLevel > maxLevel) return;
+  if (levelX > maxDepth) return;
 
-  const getSubNodesArgument = { path, parentNode, xLevel, yLevel };
+  const getSubNodesArgument = { path, parentNode, levelX, levelY };
   const subNodes = getSubNodes(getSubNodesArgument);
 
   if (!subNodes.length) return;
+  if (!shouldDescend({ subNodes, ...getSubNodesArgument })) return;
 
-  {
-    const shouldDescend = shouldDescendIntoSubNode({
-      subNodes,
-      ...getSubNodesArgument,
-    });
-
-    if (!shouldDescend) return;
-  }
-
-  sortNodes(subNodes);
+  sortNodes({ subNodes, ...getSubNodesArgument });
 
   forEach(subNodes, (node, index) => {
     const currentPath = Object.freeze([...path, node.name]);
     const isLastNode = index === subNodes.length - 1;
 
     const getNodePrefixArgument = {
-      xLevel,
+      levelX,
       connectors,
       isLastNode,
       indentationLength,
@@ -54,23 +46,23 @@ export default function printTree(arg: PrintTree_Argument) {
 
     printNode({
       node,
-      yLevel,
+      levelY: levelY,
       path: currentPath,
       nodePrefix: prefix,
       parentNode: parentNode,
       ...getNodePrefixArgument,
     });
 
-    yLevel++;
+    levelY++;
 
     printTree({
       ...arg,
-      yLevel,
+      levelY: levelY,
       path: currentPath,
-      xLevel: xLevel + 1,
+      levelX: levelX + 1,
       parentNode: node.value,
       xLevelsOfLastNodeAncestors: isLastNode
-        ? Object.freeze([...xLevelsOfLastNodeAncestors, xLevel])
+        ? Object.freeze([...xLevelsOfLastNodeAncestors, levelX])
         : xLevelsOfLastNodeAncestors,
     });
   });

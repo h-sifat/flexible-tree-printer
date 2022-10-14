@@ -3,38 +3,38 @@ import { is, validate, validatePrintTreeArgument } from "../src/util";
 describe("validatePrintTreeArgument", () => {
   const validArg = Object.freeze({
     path: [],
-    xLevel: 1,
-    yLevel: 1,
+    levelX: 1,
+    levelY: 1,
     connectors: {},
     parentNode: null,
     forEach: () => {},
-    maxLevel: Infinity,
+    maxDepth: Infinity,
     printNode: () => {},
     sortNodes: () => {},
     indentationLength: 4,
     getSubNodes: () => {},
     getNodePrefix: () => {},
+    shouldDescend: () => true,
     xLevelsOfLastNodeAncestors: [],
-    shouldDescendIntoSubNode: () => true,
     printRootNode: () => console.log("."),
   });
 
   const invalidArgs = Object.freeze({
     path: 234, // not array
-    xLevel: "324", // not number
-    yLevel: [], // not number
-    connectors: null, // not plain_object
-    parentNode: 2234, // not object
+    levelY: [], // not number
     forEach: {}, // not function
-    maxLevel: Symbol(), // not number
-    printNode: 24_234, // not function
+    levelX: "324", // not number
+    parentNode: 2234, // not object
+    maxDepth: Symbol(), // not number
     sortNodes: false, // not function
-    indentationLength: "4", // not number
-    getSubNodes: [() => {}], // not function
-    getNodePrefix: "duck", // not function
-    xLevelsOfLastNodeAncestors: 324, /// not array
-    shouldDescendIntoSubNode: "no, shut up!", // not function
+    printNode: 24_234, // not function
     printRootNode: ".", // not function
+    connectors: null, // not plain_object
+    indentationLength: "4", // not number
+    getNodePrefix: "duck", // not function
+    getSubNodes: [() => {}], // not function
+    shouldDescend: "no, shut up!", // not function
+    xLevelsOfLastNodeAncestors: 324, /// not array
   });
 
   {

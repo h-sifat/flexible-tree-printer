@@ -7,10 +7,10 @@ import {
 } from "./interface";
 
 interface ValidateInteger_Argument {
+  number: any;
   max?: number;
   min?: number;
   name: string;
-  number: any;
   maxValueName?: string;
   minValueName?: string;
 }
@@ -110,9 +110,9 @@ export function validate<Type>(
 
 const printTreeArgumentSchema = Object.freeze({
   path: "array",
-  xLevel: "number",
-  yLevel: "number",
-  maxLevel: "number",
+  levelX: "number",
+  levelY: "number",
+  maxDepth: "number",
   forEach: "function",
   parentNode: "object",
   printNode: "function",
@@ -120,10 +120,10 @@ const printTreeArgumentSchema = Object.freeze({
   getSubNodes: "function",
   getNodePrefix: "function",
   printRootNode: "function",
+  shouldDescend: "function",
   connectors: "plain_object",
   indentationLength: "number",
   xLevelsOfLastNodeAncestors: "array",
-  shouldDescendIntoSubNode: "function",
   numOfHLinesBeforeNode: { type: "number", isOptional: true },
 });
 
