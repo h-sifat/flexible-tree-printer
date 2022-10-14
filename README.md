@@ -580,3 +580,63 @@ printTree({ printRootNode: () => console.log("[*]") });
 // [*]
 // it just prints the root node
 ```
+
+## Tutorial
+
+Let's make a simple program like the unix `tree` command with this library.
+
+```js
+const fs = require("fs");
+const path = require("path");
+const { printTree } = require("flexible-tree-printer");
+
+const maxDepth = 3;
+const startDirectory = "<your-start-directory-here>";
+const baseDirectory = path.resolve(startDirectory);
+
+printTree({ getSubNodes, maxDepth });
+
+function getSubNodes({ path: pathArray }) {
+  const currentPath = path.join(baseDirectory, ...pathArray);
+
+  try {
+    const entries = fs.readdirSync(currentPath);
+    return entries.map((entry) => ({ name: entry, value: entry }));
+  } catch (ex) {
+    // if the path is not a dir so return an empty array
+    // denoting that this node has no sub nodes.
+    if (ex.code === "ENOTDIR") return [];
+
+    // quit the program
+    exit(ex.message);
+  }
+}
+
+function exit(message, code = 1) {
+  console.error(message);
+  process.exit(code);
+}
+```
+
+## Development
+
+To run tests:
+
+```bash
+npm test
+
+npm test:watch # run tests in watch mode
+
+npm test:coverage # run test coverage
+```
+
+To build the package run:
+
+```bash
+npm run build
+```
+
+## Contributing
+
+If you find any bug or want to improve this package then feel free to open an
+issue. Pull requests are also welcomed 💝.
