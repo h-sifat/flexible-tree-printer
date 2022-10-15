@@ -508,8 +508,8 @@ all the `X` levels of ancestors which are the last node of their parent.
 ```
 
 For the nodes "English" and "Math", their ancestors "study" (level 2) and the
-"root" (level 1) node are the last child of their parent. So for these nodes, we
-should not fill these levels with the `"│"` (`connectors.vLine`) character.
+"root" (level 1) nodes are the last child of their parent. So for these nodes,
+we should not fill these levels with the `"│"` (`connectors.vLine`) character.
 Otherwise the tree would look like:
 
 ```
@@ -638,5 +638,5 @@ npm run build
 
 ## Contributing
 
-If you find any bug or want to improve this package then feel free to open an
+If you find a bug or want to improve this package then feel free to open an
 issue. Pull requests are also welcomed 💝.
