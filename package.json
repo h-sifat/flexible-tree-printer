@@ -1,6 +1,6 @@
 {
   "name": "flexible-tree-printer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The most flexible console tree printer like the unix \"tree\" command that you can customize to suit your specific needs.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
