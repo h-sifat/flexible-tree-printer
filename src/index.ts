@@ -55,6 +55,9 @@ export function printTree<NodeType = any>(
       xLevelsOfLastNodeAncestors: [],
     };
 
+  printTreeArgument.numOfHLinesBeforeNode =
+    printTreeArgument.indentationLength - 2;
+
   validatePrintTreeArgument(printTreeArgument);
 
   printTreeArgument.printRootNode();
