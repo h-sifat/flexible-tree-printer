@@ -33,11 +33,15 @@ export const DEFAULTS: Omit<
   printRootNode: () => console.log("."),
 });
 
-type PrintTreeWrapperArgument = Partial<PrintTree_Argument> & {
-  printRootNode: () => void;
+type PrintTreeWrapperArgument<NodeType> = Partial<
+  PrintTree_Argument<NodeType>
+> & {
+  printRootNode?: () => void;
 };
 
-export function printTree(userArgument: PrintTreeWrapperArgument) {
+export function printTree<NodeType = any>(
+  userArgument: PrintTreeWrapperArgument<NodeType>
+) {
   const printTreeArgument: PrintTree_Argument & { printRootNode: () => void } =
     {
       ...DEFAULTS,

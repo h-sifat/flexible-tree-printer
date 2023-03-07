@@ -194,23 +194,21 @@ export function forEach<Type>(array: Type[], callback: ForEachCallback<Type>) {
     callback(array[index], index, array);
 }
 
-export function printNode(arg: PrintNode_Argument) {
+export function printNode<T>(arg: PrintNode_Argument<T>) {
   const line = arg.nodePrefix.join("") + arg.node.name;
   console.log(line);
 }
 
-export function getSubNodes(arg: GetSubNode_Argument): Node<any>[] {
-  {
-    const hasNoSubNodes =
-      !arg.parentNode ||
-      arg.parentNode === null ||
-      typeof arg.parentNode !== "object";
-
-    if (hasNoSubNodes) return [];
-  }
+export function getSubNodes<T>(arg: GetSubNode_Argument<T>): Node<T>[] {
+  if (
+    !arg.parentNode ||
+    arg.parentNode === null ||
+    typeof arg.parentNode !== "object"
+  )
+    return [];
 
   return Object.entries(arg.parentNode).map(([name, value]) => ({
     name,
     value,
-  }));
+  })) as Node<T>[];
 }

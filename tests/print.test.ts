@@ -9,6 +9,7 @@ const argMethods = Object.freeze({
   getSubNodes: jest.fn(),
   getNodePrefix: jest.fn(),
   shouldDescend: jest.fn(),
+  printRootNode: jest.fn(),
 } as const);
 
 const arg: PrintTree_Argument = Object.freeze({
@@ -36,7 +37,7 @@ it(`stops printing if levelX becomes greater than maxLevel`, () => {
   });
 });
 
-it(`doesn't returns if the subNodes array is empty`, () => {
+it(`doesn't call any other functions if getSubNodes returns an empty array`, () => {
   argMethods.getSubNodes.mockReturnValueOnce([]);
 
   printTree(arg);

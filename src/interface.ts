@@ -7,22 +7,23 @@ export type Connectors = Readonly<{
 }>;
 
 // ============
-export interface PrintTree_Argument<Type = any> {
+export interface PrintTree_Argument<NodeType = any> {
   levelX: number;
   levelY: number;
   maxDepth: number;
-  parentNode: Type;
-  printNode: PrintNode;
   connectors: Connectors;
-  forEach: ForEach<Type>;
   path: Readonly<string[]>;
   indentationLength: number;
-  getNodePrefix: GetNodePrefix;
-  shouldDescend: ShouldDescend;
-  getSubNodes: GetSubNodes<Type>;
+  printRootNode: () => void;
+  forEach: ForEach<NodeType>;
+  parentNode: NodeType | null;
   numOfHLinesBeforeNode?: number;
-  sortNodes: (arg: ShouldDescend_Argument) => void;
+  printNode: PrintNode<NodeType>;
+  getSubNodes: GetSubNodes<NodeType>;
+  getNodePrefix: GetNodePrefix<NodeType>;
+  shouldDescend: ShouldDescend<NodeType>;
   xLevelsOfLastNodeAncestors: Readonly<number[]>;
+  sortNodes: (arg: ShouldDescend_Argument<NodeType>) => void;
 }
 
 // ============
@@ -31,34 +32,42 @@ export interface Node<Type> {
   name: string;
 }
 
-export type GetSubNode_Argument = Pick<
-  PrintTree_Argument,
+export type GetSubNode_Argument<NodeType> = Pick<
+  PrintTree_Argument<NodeType>,
   "path" | "parentNode" | "levelX" | "levelY"
 >;
-export type GetSubNodes<Type> = (arg: GetSubNode_Argument) => Node<Type>[];
+export type GetSubNodes<Type> = (
+  arg: GetSubNode_Argument<Type>
+) => Node<Type>[];
 
 // ============
-type ShouldDescend_Argument = GetSubNode_Argument & { subNodes: Node<any>[] };
-type ShouldDescend = (arg: ShouldDescend_Argument) => boolean;
+type ShouldDescend_Argument<NodeType> = GetSubNode_Argument<NodeType> & {
+  subNodes: Node<NodeType>[];
+};
+type ShouldDescend<NodeType> = (
+  arg: ShouldDescend_Argument<NodeType>
+) => boolean;
 
 // ============
-export type GetNodePrefix_Argument = Pick<
-  PrintTree_Argument,
+export type GetNodePrefix_Argument<NodeType> = Pick<
+  PrintTree_Argument<NodeType>,
   | "levelX"
   | "connectors"
   | "indentationLength"
   | "numOfHLinesBeforeNode"
   | "xLevelsOfLastNodeAncestors"
 > & { isLastNode: boolean };
-export type GetNodePrefix = (arg: GetNodePrefix_Argument) => string[];
+export type GetNodePrefix<NodeType> = (
+  arg: GetNodePrefix_Argument<NodeType>
+) => string[];
 
 // ============
-export type PrintNode_Argument = GetNodePrefix_Argument &
-  Pick<PrintTree_Argument, "parentNode" | "path" | "levelY"> & {
-    node: Node<any>;
+export type PrintNode_Argument<NodeType> = GetNodePrefix_Argument<NodeType> &
+  Pick<PrintTree_Argument<NodeType>, "parentNode" | "path" | "levelY"> & {
+    node: Node<NodeType>;
     nodePrefix: string[];
   };
-export type PrintNode = (arg: PrintNode_Argument) => void;
+export type PrintNode<NodeType> = (arg: PrintNode_Argument<NodeType>) => void;
 
 // ============
 export type ForEachCallback<Type> = (

@@ -1,6 +1,8 @@
 import { GetNodePrefix_Argument } from "./interface";
 
-export default function getNodePrefix(arg: GetNodePrefix_Argument) {
+export default function getNodePrefix<NodeType>(
+  arg: GetNodePrefix_Argument<NodeType>
+) {
   const { connectors, indentationLength } = arg;
   const SPACE_OFFSET = new Array(indentationLength - 1).fill(connectors.space);
 
