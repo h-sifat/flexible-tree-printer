@@ -1,4 +1,4 @@
-import { it, expect, test } from 'vitest';
+import { it, expect, test } from "vitest";
 import { connectors } from "../src";
 import getNodePrefix from "../src/prefix-generator";
 

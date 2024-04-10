@@ -61,7 +61,25 @@ npm install flexible-tree-printer
 
 ```html
 <script src="https://unpkg.com/flexible-tree-printer"></script>
-<!-- It will be available globally by the name "flexible_tree_printer" -->
+<!-- It will be available globally by the name "flexibleTreePrinter" -->
+```
+
+**Note:** If you're using dynamic import with the unpkg link then the import
+statement wont return the actual module. You'll have to access it through the
+global name `flexibleTreePrinter`.
+
+**Incorrect:**
+
+```js
+const { printTree } = await import("https://unpkg.com/flexible-tree-printer");
+// printTree: undefined
+```
+
+**Corrects:**
+
+```js
+await import("https://unpkg.com/flexible-tree-printer");
+const { printTree } = flexibleTreePrinter;
 ```
 
 ## Features

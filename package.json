@@ -1,6 +1,6 @@
 {
   "name": "flexible-tree-printer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The most flexible console tree printer like the unix \"tree\" command that you can customize to suit your specific needs.",
   "type": "module",
   "source": "src/index.ts",
@@ -10,9 +10,10 @@
     "types": "./dist/index.d.ts"
   },
   "types": "dist/index.d.ts",
-  "main": "./dist/index.cjs",     
+  "main": "./dist/index.cjs",
   "module": "./dist/index.module.js",
-  "unpkg": "./dist/index.umd.js", 
+  "unpkg": "./dist/index.umd.js",
+  "amdName": "flexibleTreePrinter",
   "scripts": {
     "build": "microbundle",
     "dev": "microbundle watch",
@@ -28,10 +29,10 @@
     "url": "git+https://github.com/h-sifat/flexible-tree-printer.git"
   },
   "keywords": [
+    "tree print",
+    "print tree",
     "tree",
-    "print",
-    "console",
-    "pretty",
+    "object pretty print",
     "object-treefy"
   ],
   "author": "Muhammad Sifat Hossain",

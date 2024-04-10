@@ -1,4 +1,4 @@
-import { it, expect, beforeEach, vi } from 'vitest';
+import { it, expect, beforeEach, vi } from "vitest";
 import { connectors } from "../src";
 import printTree from "../src/print";
 import { PrintTree_Argument } from "../src/interface";

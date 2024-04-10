@@ -1,3 +1,7 @@
+## v1.0.3
+
+1. Fix unpkg import not working
+
 ## v1.0.2
 
 1. Fix undefined "numOfHLinesBeforeNode" property in printTree arg object
