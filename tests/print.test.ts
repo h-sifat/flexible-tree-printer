@@ -1,15 +1,16 @@
+import { it, expect, beforeEach, vi } from 'vitest';
 import { connectors } from "../src";
 import printTree from "../src/print";
 import { PrintTree_Argument } from "../src/interface";
 
 const argMethods = Object.freeze({
-  forEach: jest.fn(),
-  printNode: jest.fn(),
-  sortNodes: jest.fn(),
-  getSubNodes: jest.fn(),
-  getNodePrefix: jest.fn(),
-  shouldDescend: jest.fn(),
-  printRootNode: jest.fn(),
+  forEach: vi.fn(),
+  printNode: vi.fn(),
+  sortNodes: vi.fn(),
+  getSubNodes: vi.fn(),
+  getNodePrefix: vi.fn(),
+  shouldDescend: vi.fn(),
+  printRootNode: vi.fn(),
 } as const);
 
 const arg: PrintTree_Argument = Object.freeze({
@@ -116,7 +117,7 @@ it(`calls the sortNodes before looping over nodes and printing them`, () => {
   expect(argMethods.getNodePrefix).not.toHaveBeenCalled();
 });
 
-describe("inside the loop it should call the getNodePrefix function", () => {
+it("inside the loop it should call the getNodePrefix function", () => {
   const fakeSubNodes = [{ name: "A", value: 1 }];
 
   argMethods.getSubNodes.mockReturnValueOnce(fakeSubNodes);

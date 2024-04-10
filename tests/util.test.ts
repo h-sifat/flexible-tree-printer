@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest';
 import { is, validate, validatePrintTreeArgument } from "../src/util";
 
 describe("validatePrintTreeArgument", () => {
@@ -7,13 +8,13 @@ describe("validatePrintTreeArgument", () => {
     levelY: 1,
     connectors: {},
     parentNode: null,
-    forEach: () => {},
+    forEach: () => { },
     maxDepth: Infinity,
-    printNode: () => {},
-    sortNodes: () => {},
+    printNode: () => { },
+    sortNodes: () => { },
     indentationLength: 4,
-    getSubNodes: () => {},
-    getNodePrefix: () => {},
+    getSubNodes: () => { },
+    getNodePrefix: () => { },
     shouldDescend: () => true,
     xLevelsOfLastNodeAncestors: [],
     printRootNode: () => console.log("."),
@@ -32,7 +33,7 @@ describe("validatePrintTreeArgument", () => {
     connectors: null, // not plain_object
     indentationLength: "4", // not number
     getNodePrefix: "duck", // not function
-    getSubNodes: [() => {}], // not function
+    getSubNodes: [() => { }], // not function
     shouldDescend: "no, shut up!", // not function
     xLevelsOfLastNodeAncestors: 324, /// not array
   });
@@ -117,7 +118,7 @@ describe("is", () => {
     },
     {
       type: "function",
-      valid: [() => {}, String],
+      valid: [() => { }, String],
       invalid: [1, {}],
     },
     {
